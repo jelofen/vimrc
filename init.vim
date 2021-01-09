@@ -18,9 +18,14 @@ set nobackup
 set undodir=~/.vim/undodir
 set undofile
 set incsearch
+set termguicolors
 set scrolloff=8
 set foldmethod=syntax
 set nofoldenable
+set noshowmode
+set completeopt=menuone,noinsert,noselect
+set signcolumn=yes
+
 " Give more space for displaying messages.
 set cmdheight=2
 
@@ -35,41 +40,31 @@ set shortmess+=c
 
 set colorcolumn=80
 augroup FileTypeSpecificAutocommands
-    autocmd FileType javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd FileType javascript  setlocal tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 call plug#begin('~/.vim/plugged')
-
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tweekmonster/gofmt.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
 Plug 'scrooloose/nerdtree'
 Plug 'mbbill/undotree'
-Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vuciv/vim-bujo'
 Plug 'tpope/vim-dispatch'
-
 Plug 'gruvbox-community/gruvbox'
-Plug 'sainnhe/gruvbox-material'
-Plug 'phanviet/vim-monokai-pro'
+"Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
-Plug 'flazz/vim-colorschemes'
 Plug 'scrooloose/nerdcommenter'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'neovim/nvim-lspconfig'
+"Plug 'nvim-lua/completion-nvim'
 
 call plug#end()
-
-let g:gruvbox_contrast_dark = 'hard'
-if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-let g:gruvbox_invert_selection='0'
 
 " --- nerdtree settings
 " How can I close vim if the only window left open is a NERDTree?
@@ -105,6 +100,22 @@ let g:go_auto_sameids = 1
 colorscheme gruvbox
 set background=dark
 
+let g:gruvbox_contrast_dark = 'hard'
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
+let g:gruvbox_invert_selection='0'
+
+highlight ColorColumn ctermbg=0 guibg=grey
+" highlight Normal guibg=none
+highlight LineNr guifg=#ff8659
+" highlight LineNr guifg=#aed75f
+highlight LineNr guifg=#5eacd3
+highlight netrwDir guifg=#5eacd3
+highlight qfFileName guifg=#aed75f
+
+
 if executable('rg')
     let g:rg_derive_root='true'
 endif
@@ -117,6 +128,47 @@ let g:vrfr_rg = 'true'
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
 
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
+
+
+" coc
+inoremap <silent><expr> <C-space> coc#refresh()
+
+let g:coc_global_extensions = [
+\ 'coc-tsserver',
+\]
+
+" GoTo code navigation.
+nmap <silent>gd <Plug>(coc-definition)
+nmap <silent>gy <Plug>(coc-type-definition)
+nmap <silent>gi <Plug>(coc-implementation)
+nmap <silent>gr <Plug>(coc-references)
+nmap <silent>rr <Plug>(coc-rename)
+nmap <silent>g[ <Plug>(coc-diagnostic-prev)
+nmap <silent>g] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
+nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
+
+
+"nnoremap <leader>va :lua vim.lsp.buf.definition()<CR>
+"nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
+"nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
+"nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
+"nnoremap <leader>vrr :lua vim.lsp.buf.references()<CR>
+"nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
+"nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
+"nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
+"nnoremap <leader>vsd :lua vim.lsp.util.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
+
+" <Plug>VimspectorStop
+" <Plug>VimspectorPause
+" <Plug>VimspectorAddFunctionBreakpoint
+nnoremap <leader>gc :GBranches<CR>
+nnoremap <leader>ga :Git fetch --all<CR>
+nnoremap <leader>grum :Git rebase upstream/master<CR>
+nnoremap <leader>grom :Git rebase origin/master<CR>
+nnoremap <leader>ghw :h <C-R>=expand("<cword>")<CR><CR>
 nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
 nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
 nnoremap <leader>phw :h <C-R>=expand("<cword>")<CR><CR>
@@ -143,49 +195,17 @@ nmap <Leader>tu <Plug>BujoChecknormal
 nmap <Leader>th <Plug>BujoAddnormal
 let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
 
-" Vim with me
-nnoremap <leader>vwm :colorscheme gruvbox<bar>:set background=dark<CR>
-nmap <leader>vtm :highlight Pmenu ctermbg=gray guibg=gray
-
 vnoremap X "_d
 inoremap <C-c> <esc>
 
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+"lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
+"lua require'lspconfig'.clangd.setup{ on_attach=require'completion'.on_attach }
+"lua require'lspconfig'.pyls.setup{ on_attach=require'completion'.on_attach }
+"lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
+" lua require'nvim_lsp'.sumneko_lua.setup{ on_attach=require'completion'.on_attach }
 
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-inoremap <silent><expr> <C-space> coc#refresh()
-
-let g:coc_global_extensions = [
-\ 'coc-tslint-plugin',
-\ 'coc-tsserver',
-  \ 'coc-clangd',
-\ 'coc-python',
-\ 'coc-emmet',
-\ 'coc-css',
-\ 'coc-html',
-\ 'coc-json',
-\ 'coc-yank',
-\ 'coc-prettier',
-\ 'coc-git',
-\ 'coc-highlight'
-\]
-
-" GoTo code navigation.
-nmap <silent>gd <Plug>(coc-definition)
-nmap <silent>gy <Plug>(coc-type-definition)
-nmap <silent>gi <Plug>(coc-implementation)
-nmap <silent>gr <Plug>(coc-references)
-nmap <silent>rr <Plug>(coc-rename)
-nmap <silent>g[ <Plug>(coc-diagnostic-prev)
-nmap <silent>g] <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
-nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
-nnoremap <leader>cr :CocRestart
-
-" Sweet Sweet FuGITive
+" FuGITive
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
 nmap <leader>gs :G<CR>
@@ -225,3 +245,5 @@ let g:go_def_mapping_enabled = 0
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+'
+
