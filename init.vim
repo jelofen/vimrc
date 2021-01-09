@@ -1,270 +1,227 @@
-" File ~/.nvimrc
+syntax on
 
-call plug#begin('~/.config/nvim/plugged')
+set nocompatible
+set noshowmatch
+set relativenumber
+set hlsearch
+set hidden
+set noerrorbells
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set nu
+set nowrap
+set smartcase
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+set incsearch
+set scrolloff=8
+set foldmethod=syntax
+set nofoldenable
+" Give more space for displaying messages.
+set cmdheight=2
 
-" General
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=50
 
-Plug 'tpope/vim-sensible'
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
-Plug 'davidhalter/jedi-vim'
-" Colorschemes
-Plug 'chriskempson/base16-vim'
+"set path+=**
 
-Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+set colorcolumn=80
+augroup FileTypeSpecificAutocommands
+    autocmd FileType javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+augroup END
 
-" Syntax aware commenting.
-Plug 'scrooloose/nerdcommenter'
+highlight ColorColumn ctermbg=0 guibg=lightgrey
 
-Plug 'jreybert/vimagit'
+call plug#begin('~/.vim/plugged')
 
-" Use fugitive since vimagit can't really do blame/etc. just yet.
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tweekmonster/gofmt.vim'
 Plug 'tpope/vim-fugitive'
-
-" show add/deletions in sidebar gutter
-Plug 'airblade/vim-gitgutter'
-
-" Streamlined statusline.
-Plug 'itchyny/lightline.vim'
-Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'NovaDev94/lightline-onedark'
-
-" Smarter search/replace with :S (:Subvert) and %S (%Subvert)
-Plug 'tpope/vim-abolish'
-
-" Automatically insert or delete brackets, parens, quotes in pair.
-Plug 'jiangmiao/auto-pairs'
-
-" Editorconfig settings
-Plug 'editorconfig/editorconfig-vim'
-
-" Custom marks/shortcuts to jump to marks
-Plug 'kshenoy/vim-signature'
-
-" Custom start screen
-Plug 'mhinz/vim-startify'
-
-" Bracket pair mapping
-" Plug 'tpope/vim-unimpaired'
-
-" Syntax checker
-Plug 'w0rp/ale'
-
-" Formatting for various languages
-Plug 'sbdchd/neoformat'
-
-" Language client completions
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
-" Fuzzy file finder
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-
-" Syntax highlighting
+Plug 'vim-utils/vim-man'
+Plug 'scrooloose/nerdtree'
+Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
-Plug 'saltstack/salt-vim'
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'rhysd/vim-gfm-syntax'
-Plug 'rakr/vim-one'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'vuciv/vim-bujo'
+Plug 'tpope/vim-dispatch'
 
-" For writing prose.
-Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-wordy'
-Plug 'reedes/vim-lexical'
-
-" Ctags tagbar
-Plug 'majutsushi/tagbar'
-
-" Python-specific
-Plug 'roxma/python-support.nvim'
-Plug 'ambv/black'
-
-set laststatus=2
+Plug 'gruvbox-community/gruvbox'
+Plug 'sainnhe/gruvbox-material'
+Plug 'phanviet/vim-monokai-pro'
+Plug 'vim-airline/vim-airline'
+Plug 'flazz/vim-colorschemes'
+Plug 'scrooloose/nerdcommenter'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 
-" Colorscheme configuration
-set background=dark
-colorscheme one
-set t_Co=256
-
-" Basic configurations
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = ","
-set number " Relative line numbering
-set relativenumber " Relative line numbering
-set ignorecase! " Ignore case in search
-set hidden " Hide instead of close bufffers to preserve history
-set synmaxcol=200 " only syntax highlight first 200cols for performance reasons.
-
-" Toggle highlight on ,/
-nnoremap <leader>/ :set hlsearch!<CR>
-
-" Save file
-inoremap <leader>w <Esc>:w<CR><Space>
-
-" I CAN HAZ NORMAL REGEXES?
-nnoremap / /\v
-vnoremap / /\v
-
-set grepprg=rg\ --vimgrep " Use ripgrep for regular grep
-
-" Special characters for hilighting non-priting spaces/tabs/etc.
-set list listchars=tab:»\ ,trail:·
-
-" Where swap and backup files go
-"set backupdir=~/.config/nvim/backup_files//
-"set directory=~/.config/nvim/swap_files//
-"set undodir=~/.config/nvim/undo_files//
-
-" Use italics
-let g:onedark_terminal_italics = 1
-let g:one_allow_italics = 1
-
-highlight Comment ctermfg=59 guifg=#5C6370 gui=italic
-
-" Cursor configuration
-highlight Cursor guifg=white guibg=black
-" Insert mode is iCursor
-highlight iCursor guifg=white guibg=steelblue
-
-" Deoplete/jedi configurations.
-"''''''''''''''''''''''''''''''
-let g:deoplete#enable_at_startup = 1
-
-" Gitgutter
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Always show the sign column so that we don't get shifting
-" left/right margins.
-set signcolumn=yes
-
-" FZF file finder plugin
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-noremap <C-p> :FZF<CR>
-let g:fzf_height = '30%'
-
-" All fzf commands will require this prefix
-let g:fzf_command_prefix = 'FZ'
-
-" [Buffers] Jump to the existing window if possible
-let g:fzf_buffers_jump = 1
-
-" [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R'
-let g:fzf_tags_options = '-f .ctags"'
-
-" --column: Show column number
-" --line-number: Show line number
-" --no-heading: Do not show file headings in results
-" --fixed-strings: Search term as a literal string
-" --ignore-case: Case insensitive search
-" --hidden: Search hidden files and folders
-" --follow: Follow symlinks
-" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
-" --color: Search color options
-command! -bang -nargs=* Find
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --ignore-case --glob "!.git/*" '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-
-" NERDTree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let NERDTreeIgnore = ['\.pyc$', '\.egg$', '\.o$', '\~$', '__pycache__$', '\.egg-info$', 'node_modules$']
-map <F9> :NERDTreeToggle<CR>
-" open Nerd Tree in folder of file in active buffer
-map <Leader>t :NERDTree %:p:h<CR>
-
-" Tagbar/ctags
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <F2> :TagbarToggle<CR>
-
-autocmd FileType jinja,html setlocal shiftwidth=2 expandtab tabstop=2 softtabstop=2
-
-" Python specific configs
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" We like spaces; avoid tabs. Set colorcolumn.
-"autocmd FileType python setlocal shiftwidth=4 expandtab tabstop=4 softtabstop=4 colorcolumn=80
-autocmd FileType python setlocal colorcolumn=88
-
-" Worp/ale configuration
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Ignore line too long error and specific hanging indent error
-let g:ale_python_flake8_args="--ignore=E501,E128"
-
-" NeoVim python configs
-let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'flake8')
-let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'python-language-server')
-let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'jedi')
-
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'flake8')
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'python-language-server')
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mypy')
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
-let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'pyls-mypy')
-
-" Language server configurations
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ }
-
-
-" Status line
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:lightline = {
-      \ 'colorscheme': 'onedark',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
-
-" Tell Vim which characters to show for expanded TABs,
-" trailing whitespace, and end-of-lines. VERY useful!
-" (Sourced from http://nerditya.com/code/guide-to-neovim/)
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+let g:gruvbox_contrast_dark = 'hard'
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
-set list                " Show problematic characters.
+let g:gruvbox_invert_selection='0'
 
-" Editorconfig exceptions
-let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+" --- nerdtree settings
+" How can I close vim if the only window left open is a NERDTree?
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" toggle NERDTree
+map <C-n> :NERDTreeToggle<CR>
+map <F9> :NERDTreeToggle %:p:h<CR>
+let g:NERDTreeChDirMode=2
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__', 'node_modules']
+let g:NERDTreeSortOrder=['^__\.js$', '^__\.ts$', '^__\.c$', '^__\.cpp$', '^__\.hpp$', '^__\.h$', '^__\.go$', '^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+let g:NERDTreeShowBookmarks=1
+let g:nerdtree_tabs_focus_on_files=1
+let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlitelet,*/node_modules/*
+" set g:NERDToggleCheckAllLines=1
 
-" PROSE
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" --- vim go (polyglot) settings.
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_auto_sameids = 1
 
-let g:pencil#textwidth = 78
+colorscheme gruvbox
+set background=dark
 
-augroup pencil
-  autocmd!
-  autocmd FileType mail call pencil#init({'wrap': 'hard', 'textwidth': 72})
-                    \ | call lexical#init()
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
+
+let loaded_matchparen = 1
+let mapleader = " "
+
+let g:netrw_browse_split = 2
+let g:vrfr_rg = 'true'
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
+
+nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>phw :h <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <Leader>ps :Rg<SPACE>
+nnoremap <C-p> :GFiles<CR>
+"nnoremap <C-p> :files<CR>
+nnoremap <Leader>pf :Files<CR>
+nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
+nnoremap <Leader>+ :vertical resize +5<CR>
+nnoremap <Leader>- :vertical resize -5<CR>
+nnoremap <Leader>rp :resize 100<CR>
+nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" vim TODO
+nmap <Leader>tu <Plug>BujoChecknormal
+nmap <Leader>th <Plug>BujoAddnormal
+let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
+
+" Vim with me
+nnoremap <leader>vwm :colorscheme gruvbox<bar>:set background=dark<CR>
+nmap <leader>vtm :highlight Pmenu ctermbg=gray guibg=gray
+
+vnoremap X "_d
+inoremap <C-c> <esc>
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+inoremap <silent><expr> <C-space> coc#refresh()
+
+let g:coc_global_extensions = [
+\ 'coc-tslint-plugin',
+\ 'coc-tsserver',
+  \ 'coc-clangd',
+\ 'coc-python',
+\ 'coc-emmet',
+\ 'coc-css',
+\ 'coc-html',
+\ 'coc-json',
+\ 'coc-yank',
+\ 'coc-prettier',
+\ 'coc-git',
+\ 'coc-highlight'
+\]
+
+" GoTo code navigation.
+nmap <silent>gd <Plug>(coc-definition)
+nmap <silent>gy <Plug>(coc-type-definition)
+nmap <silent>gi <Plug>(coc-implementation)
+nmap <silent>gr <Plug>(coc-references)
+nmap <silent>rr <Plug>(coc-rename)
+nmap <silent>g[ <Plug>(coc-diagnostic-prev)
+nmap <silent>g] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
+nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
+nnoremap <leader>cr :CocRestart
+
+" Sweet Sweet FuGITive
+nmap <leader>gh :diffget //3<CR>
+nmap <leader>gu :diffget //2<CR>
+nmap <leader>gs :G<CR>
+
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+augroup highlight_yank
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank("IncSearch", 50)
 augroup END
 
-" 24bit true color
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufWritePre * :call TrimWhitespace()
 
-"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
-"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
-"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
-if (empty($TMUX))
-  if (has("nvim"))
-    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
-  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
-  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
-  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-  if (has("termguicolors"))
-    set termguicolors
-  endif
-endif
+" move between split views
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" spell ckeck
+map <F6> :setlocal spell! spelllang=en_us<CR>
+
+" reload the .vimrc
+nnoremap <space>r :so $MYVIMRC<cr>
+
+
+" jsx
+let g:jsx_ext_required = 0
+" git
+" go
+let g:go_bin_path = $HOME."/go/bin"
+let g:go_def_mapping_enabled = 0
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
