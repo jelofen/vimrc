@@ -1,3 +1,4 @@
+
 syntax on
 
 set nocompatible
@@ -41,6 +42,7 @@ set shortmess+=c
 set colorcolumn=80
 augroup FileTypeSpecificAutocommands
     autocmd FileType javascript  setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd FileType typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
 highlight ColorColumn ctermbg=0 guibg=lightgrey
@@ -101,11 +103,12 @@ colorscheme gruvbox
 set background=dark
 
 let g:gruvbox_contrast_dark = 'hard'
-if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-let g:gruvbox_invert_selection='0'
+"if exists('+termguicolors')
+"    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"endif
+"let g:gruvbox_invert_selection='0'
+"let g:gruvbox_guisp_fallback = 'bg'
 
 highlight ColorColumn ctermbg=0 guibg=grey
 " highlight Normal guibg=none
@@ -137,7 +140,9 @@ inoremap <silent><expr> <C-space> coc#refresh()
 
 let g:coc_global_extensions = [
 \ 'coc-tsserver',
+\ 'coc-prettier'
 \]
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " GoTo code navigation.
 nmap <silent>gd <Plug>(coc-definition)
@@ -238,12 +243,13 @@ nnoremap <space>r :so $MYVIMRC<cr>
 
 " jsx
 let g:jsx_ext_required = 0
+
 " git
+
 " go
 let g:go_bin_path = $HOME."/go/bin"
 let g:go_def_mapping_enabled = 0
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
-'
 

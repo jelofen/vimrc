@@ -1,0 +1,7 @@
+{
+ "diagnostic.checkCurrentLine": true,
+ "diagnostic.messageTarget": "echo",
+ "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "javascript", "typescript"],
+ "prettier.trailingComma":"es5",
+ "prettier.singleQuote": true
+}
