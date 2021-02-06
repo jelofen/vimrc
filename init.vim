@@ -1,4 +1,3 @@
-
 syntax on
 
 set nocompatible
@@ -51,26 +50,17 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tweekmonster/gofmt.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'vim-utils/vim-man'
 Plug 'scrooloose/nerdtree'
-Plug 'mbbill/undotree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'vuciv/vim-bujo'
-Plug 'tpope/vim-dispatch'
 Plug 'gruvbox-community/gruvbox'
-"Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'scrooloose/nerdcommenter'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-"Plug 'neovim/nvim-lspconfig'
-"Plug 'nvim-lua/completion-nvim'
 
 call plug#end()
 
 " --- nerdtree settings
-" How can I close vim if the only window left open is a NERDTree?
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " toggle NERDTree
 map <C-n> :NERDTreeToggle<CR>
 map <F9> :NERDTreeToggle %:p:h<CR>
@@ -79,9 +69,7 @@ let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycach
 let g:NERDTreeSortOrder=['^__\.js$', '^__\.ts$', '^__\.c$', '^__\.cpp$', '^__\.hpp$', '^__\.h$', '^__\.go$', '^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
 let g:NERDTreeShowBookmarks=1
 let g:nerdtree_tabs_focus_on_files=1
-let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlitelet,*/node_modules/*
-" set g:NERDToggleCheckAllLines=1
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.db,*.sqlitelet,*/node_modules/*
 
 " --- vim go (polyglot) settings.
 let g:go_highlight_build_constraints = 1
@@ -102,18 +90,8 @@ let g:go_auto_sameids = 1
 colorscheme gruvbox
 set background=dark
 
-let g:gruvbox_contrast_dark = 'hard'
-"if exists('+termguicolors')
-"    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"endif
-"let g:gruvbox_invert_selection='0'
-"let g:gruvbox_guisp_fallback = 'bg'
-
 highlight ColorColumn ctermbg=0 guibg=grey
-" highlight Normal guibg=none
 highlight LineNr guifg=#ff8659
-" highlight LineNr guifg=#aed75f
 highlight LineNr guifg=#5eacd3
 highlight netrwDir guifg=#5eacd3
 highlight qfFileName guifg=#aed75f
@@ -131,9 +109,8 @@ let g:vrfr_rg = 'true'
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
 
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let g:fzf_layout = { 'down': '45%' }
 let $FZF_DEFAULT_OPTS='--reverse'
-
 
 " coc
 inoremap <silent><expr> <C-space> coc#refresh()
@@ -155,20 +132,6 @@ nmap <silent>g] <Plug>(coc-diagnostic-next)
 nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
 nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
 
-
-"nnoremap <leader>va :lua vim.lsp.buf.definition()<CR>
-"nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
-"nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
-"nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
-"nnoremap <leader>vrr :lua vim.lsp.buf.references()<CR>
-"nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
-"nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
-"nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
-"nnoremap <leader>vsd :lua vim.lsp.util.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
-
-" <Plug>VimspectorStop
-" <Plug>VimspectorPause
-" <Plug>VimspectorAddFunctionBreakpoint
 nnoremap <leader>gc :GBranches<CR>
 nnoremap <leader>ga :Git fetch --all<CR>
 nnoremap <leader>grum :Git rebase upstream/master<CR>
@@ -195,20 +158,10 @@ nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kk
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-" vim TODO
-nmap <Leader>tu <Plug>BujoChecknormal
-nmap <Leader>th <Plug>BujoAddnormal
-let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
-
 vnoremap X "_d
 inoremap <C-c> <esc>
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-"lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
-"lua require'lspconfig'.clangd.setup{ on_attach=require'completion'.on_attach }
-"lua require'lspconfig'.pyls.setup{ on_attach=require'completion'.on_attach }
-"lua require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
-" lua require'nvim_lsp'.sumneko_lua.setup{ on_attach=require'completion'.on_attach }
 
 " FuGITive
 nmap <leader>gh :diffget //3<CR>
@@ -237,14 +190,8 @@ nnoremap <C-l> <C-w>l
 " spell ckeck
 map <F6> :setlocal spell! spelllang=en_us<CR>
 
-" reload the .vimrc
-nnoremap <space>r :so $MYVIMRC<cr>
-
-
 " jsx
 let g:jsx_ext_required = 0
-
-" git
 
 " go
 let g:go_bin_path = $HOME."/go/bin"
